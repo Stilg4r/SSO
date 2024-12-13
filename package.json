@@ -1,0 +1,64 @@
+{
+  "name": "sso",
+  "version": "0.1.0",
+  "description": "Single Sing-On",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "type": "module",
+  "scripts": {
+    "prebuild": "rm -rfv dist",
+    "build": "babel src -d dist",
+    "prestart": "npm run build",
+    "start": "node dist/clusterApp.js",
+    "dev": "nodemon -w ./src --exec npx babel-node ./src/index.js",
+    "prepm2:install": "npm run build",
+    "prepm2:start": "npm run build",
+    "pm2:install": "npx pm2 start dist/clusterApp.js --name sso-api ",
+    "pm2:start": "npx pm2 restart sso-api",
+    "pm2:stop": "npx pm2 stop sso-api",
+    "pm2:delete": "npx pm2 delete sso-api",
+    "pm2:logs": "npx pm2 logs sso-api",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern='src/modules/**/test/unit'",
+    "test:integration": "jest --testPathPattern='src/modules/**/test/integration'",
+    "test:e2e": "jest --testPathPattern='src/modules/**/test/e2e'",
+    "test:coverage": "jest --coverage",
+    "db:migrate": "knex migrate:latest --env development",
+    "db:rollback": "knex migrate:rollback --env development",
+    "db:make": "knex migrate:make",
+    "db:seed": "knex seed:run --env development"
+  },
+  "keywords": [
+    "sso"
+  ],
+  "author": "INA",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/node": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "node-localstorage": "^3.0.5",
+    "nodemon": "^3.1.7",
+    "supertest": "^7.0.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.5",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "express-validator": "^7.2.0",
+    "helmet": "^8.0.0",
+    "hpp": "^0.2.3",
+    "joi": "^17.13.3",
+    "knex": "^3.1.0",
+    "morgan": "^1.10.0",
+    "paseto": "^3.1.4",
+    "sqlite3": "^5.1.7"
+  }
+}

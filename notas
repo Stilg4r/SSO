@@ -1,0 +1,2 @@
+npx knex migrate:latest --knexfile ./src/core/infrastructure/dataBase/knexConfig.cjs --migrations-directory  migrations/authentication 
+npx knex seed:run --knexfile ./src/core/infrastructure/dataBase/knexConfig.cjs --migrations-directory  migrations/authentication
