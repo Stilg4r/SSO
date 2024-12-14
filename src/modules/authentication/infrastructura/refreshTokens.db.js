@@ -45,12 +45,22 @@ export const revokedAllToken = async ({ idUsers }) => {
             })
             .update({ is_revoked: true });
 
+        if (result === 0) {
+            return {
+                error: false,
+                message: 'No se encontraron tokens activos',
+                hasData: false,
+                data: { revoked: result }
+            };
+        }
+
         return {
             error: false,
             message: 'Tokens revocados',
             hasData: true,
             data: { revoked: result }
         };
+
     } catch (error) {
         console.error(error);
         return {
@@ -72,6 +82,15 @@ export const revokedSingleToken = async ({ tokenId, idUsers }) => {
                 is_revoked: false
             })
             .update({ is_revoked: true });
+
+        if (result === 0) {
+            return {
+                error: false,
+                message: 'Token no encontrado',
+                hasData: false,
+                data: { revoked: result }
+            };
+        }
 
         return {
             error: false,
