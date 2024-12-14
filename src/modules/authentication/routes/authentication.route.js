@@ -30,6 +30,14 @@ endPoints.route('/logout')
         getLogOut
     );
 
+endPoints.route('/renew')
+    .get(
+        validateHttpMethod('get'),
+        authorizationMiddleware,
+
+        getRenewToken
+    );
+
 
 export default endPoints;
 

@@ -6,3 +6,9 @@ export const authenticationByPasswordValidation = Joi.object({
     pass: string.label('password')
 });
 
+export const renewTokenValidation = Joi.object({
+    token: Joi.string().uuid().required().messages({
+        'any.required': 'El id del token es requerido',
+    })
+});
+

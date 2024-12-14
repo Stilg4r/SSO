@@ -33,3 +33,37 @@ export const getUser = async ({ user }) => {
         };
     }
 };
+export const getUserById = async ({ id }) => {
+    try {
+        const userFound = await db
+            .select(
+                'id',
+                'user'
+            )
+            .from('users')
+            .where({
+                id,
+                is_deleted: 0,
+            })
+            .first();
+        if (userFound) {
+            return {
+                message: 'Usuario encontrado',
+                hasData: true,
+                data: userFound,
+            };
+        } else {
+            return {
+                message: 'Usuario no encontrado',
+                hasData: false,
+                data: {},
+            };
+        }
+    } catch (error) {
+        console.error(error);
+        return {
+            error: true,
+            message: 'Error al busar usuario',
+        };
+    }
+};

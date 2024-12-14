@@ -42,3 +42,8 @@ export const getLogOut = async (req, res) => {
     }
 
 };
+
+export const getRenewToken = async (req, res) => {
+    const { token: { user: { id }, jti } } = req;
+
+};
