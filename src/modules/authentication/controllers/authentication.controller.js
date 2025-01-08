@@ -1,10 +1,10 @@
 import { authenticationByPassword } from '../services/autenticacionByPassword.service.js';
 import { logOutAll, logOutSingle } from '../services/logout.service.js';
 import { responseHandler } from '../../../core/services/responsesHandlers.service.js';
-
-import { getUser } from '../infrastructura/users.db.js';
+import { getUser, getUserById } from '../infrastructura/users.db.js';
 import { getToken, storageToken } from '../../shared/services/token.service.js';
 import { revokedAllToken, revokedSingleToken } from '../infrastructura/refreshTokens.db.js';
+import { refreshToken } from '../services/renewToken.service.js';
 
 export const postAuthenticationByPassword = async (req, res) => {
     const {
@@ -45,5 +45,12 @@ export const getLogOut = async (req, res) => {
 
 export const getRenewToken = async (req, res) => {
     const { token: { user: { id }, jti } } = req;
+
+    const result = await refreshToken(
+        { idUsers: id, tokenId: jti },
+        { getUserById, getToken, storageToken, revokedSingleToken }
+    );
+
+    return responseHandler(res, result);
 
 };

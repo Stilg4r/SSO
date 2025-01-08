@@ -69,6 +69,7 @@ export const storageToken = async ({ token, tokenId }, verifyFn = verifyToken) =
         expiresAt: exp,
         createdBy: id,
     });
+
     return resultSalved;
 
 };

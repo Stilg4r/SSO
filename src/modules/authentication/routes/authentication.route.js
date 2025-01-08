@@ -8,9 +8,13 @@ import {
 
 import {
     postAuthenticationByPassword,
-    getLogOut
+    getLogOut,
+    getRenewToken
 } from '../controllers/authentication.controller.js';
-import { authenticationByPasswordValidation } from '../validation/authentication.validation.js';
+import {
+    authenticationByPasswordValidation,
+    renewTokenValidation
+} from '../validation/authentication.validation.js';
 import { authorizationMiddleware } from '../../shared/middlewares/autorization.middleware.js';
 
 const endPoints = Router();
@@ -34,7 +38,7 @@ endPoints.route('/renew')
     .get(
         validateHttpMethod('get'),
         authorizationMiddleware,
-
+        validateRequest(renewTokenValidation, 'token'),
         getRenewToken
     );
 

@@ -118,3 +118,4 @@ uploads/*
 db.sqlite
 
 storage/*
+.codegpt

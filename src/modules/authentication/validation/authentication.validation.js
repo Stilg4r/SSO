@@ -7,8 +7,11 @@ export const authenticationByPasswordValidation = Joi.object({
 });
 
 export const renewTokenValidation = Joi.object({
-    token: Joi.string().uuid().required().messages({
-        'any.required': 'El id del token es requerido',
+    jti: Joi.string().uuid().required().messages({
+        'any.required': 'El id del token es requerido, use el token de refresco',
     })
+}).options({
+    abortEarly: false,
+    stripUnknown: false,
+    allowUnknown: true
 });
-
