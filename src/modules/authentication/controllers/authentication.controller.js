@@ -3,7 +3,7 @@ import { logOutAll, logOutSingle } from '../services/logout.service.js';
 import { responseHandler } from '../../../core/services/responsesHandlers.service.js';
 import { getUser, getUserById } from '../infrastructura/users.db.js';
 import { getToken, storageToken } from '../../shared/services/token.service.js';
-import { revokedAllToken, revokedSingleToken } from '../infrastructura/refreshTokens.db.js';
+import { revokedAllToken, revokedSingleToken, findTokenByTokenId } from '../infrastructura/refreshTokens.db.js';
 import { refreshToken } from '../services/renewToken.service.js';
 
 export const postAuthenticationByPassword = async (req, res) => {
@@ -48,7 +48,7 @@ export const getRenewToken = async (req, res) => {
 
     const result = await refreshToken(
         { idUsers: id, tokenId: jti },
-        { getUserById, getToken, storageToken, revokedSingleToken }
+        { getUserById, getToken, findTokenByTokenId }
     );
 
     return responseHandler(res, result);

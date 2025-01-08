@@ -108,3 +108,39 @@ export const revokedSingleToken = async ({ tokenId, idUsers }) => {
         };
     }
 };
+
+export const findTokenByTokenId = async ({ tokenId }) => {
+
+    try {
+        const result = await db(TABLE)
+            .where({
+                token_id: tokenId,
+                is_revoked: false
+            })
+            .first();
+
+        if (!result) {
+            return {
+                error: false,
+                message: 'Token no encontrado',
+                hasData: false,
+                data: {}
+            };
+        }
+
+        return {
+            error: false,
+            message: 'Token encontrado',
+            hasData: true,
+            data: result
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            error: true,
+            message: 'Error al buscar el token',
+            hasData: false,
+            data: {}
+        };
+    }
+}

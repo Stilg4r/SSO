@@ -10,7 +10,7 @@ describe('tokens db', () => {
     });
 
     afterAll(async () => {
-        // await db.destroy();
+        await db.destroy();
     });
 
     it('Debería almacenar un token en la base de datos', async () => {
@@ -90,6 +90,14 @@ describe('tokens db', () => {
         expect(result.hasData).toBe(false);
         expect(result.data).toHaveProperty('revoked');
         expect(result.data.revoked).toBe(0);
+        expect(result.message).toBe('Token no encontrado');
+    });
+
+    it('Debería manejar cuando no se encuentra un token por su ID', async () => {
+        const result = await findTokenByTokenId({ tokenId: randomUUID() });
+
+        expect(result.error).toBe(false);
+        expect(result.hasData).toBe(false);
         expect(result.message).toBe('Token no encontrado');
     });
 

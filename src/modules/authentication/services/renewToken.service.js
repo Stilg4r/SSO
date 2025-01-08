@@ -1,11 +1,9 @@
-import { randomUUID } from 'crypto';
 export const refreshToken = async (
     { idUsers, tokenId },
     {
         getUserById,
         getToken,
-        storageToken,
-        revokedSingleToken
+        findTokenByTokenId
     }
 ) => {
 
@@ -14,27 +12,22 @@ export const refreshToken = async (
     if (!user.hasData) { return { httpCode: 404, response: user }; }
     const { data: { id } } = user;
 
-    const resultRevoked = await revokedSingleToken({ tokenId, idUsers });
-    if (resultRevoked.error) { return { httpCode: 500, response: resultRevoked }; }
-    if (!resultRevoked.hasData) { return { httpCode: 404, response: resultRevoked }; }
+    // buscar el token en la base de datos y validar si existe y si no ha sido revocado
+    const token = await findTokenByTokenId({ tokenId });
+    if (token.error) return { httpCode: 500, response: token };
+    if (!token.hasData) return { httpCode: 404, response: token };
+    const { data: { revoked } } = token;
+    if (revoked) return { httpCode: 401, response: { message: 'Token revocado', data: {} } };
 
-    // Generar token refresh y access 
-    const newtokenId = randomUUID();
-    const refreshToken = await getToken({ payload: { user: { id } }, options: { expiresIn: '7h', jti: newtokenId } });
-    if (refreshToken.error) return { httpCode: 500, response: refreshToken };
-
+    // Generar token accesso
     const accessToken = await getToken({ payload: { user: { id } }, options: { expiresIn: '1h' } });
     if (accessToken.error) return { httpCode: 500, response: accessToken };
-
-    const saveTokenRefresh = await storageToken({ token: refreshToken.data.token, tokenId: newtokenId });
-    if (saveTokenRefresh.error) return { httpCode: 500, response: saveTokenRefresh };
 
     return {
         httpCode: 200,
         response: {
             message: 'Renovación de token correcta',
             data: {
-                refreshToken: refreshToken.data.token,
                 accessToken: accessToken.data.token
             }
         }
