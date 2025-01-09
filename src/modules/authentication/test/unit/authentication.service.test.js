@@ -22,14 +22,14 @@ describe('authenticationByPassword Service', () => {
             data: { token: 'mocked-token' },
         });
 
-        const storageToken = jest.fn().mockResolvedValue({
+        const storeToken = jest.fn().mockResolvedValue({
             error: false,
             message: 'Token guardado',
             hasData: true,
             data: { idRefreshTokens: 1 }
         });
 
-        const revokedAllToken = jest.fn().mockResolvedValue({
+        const revokeAllTokens = jest.fn().mockResolvedValue({
             error: false,
             message: 'Tokens revocados',
             hasData: true,
@@ -40,7 +40,7 @@ describe('authenticationByPassword Service', () => {
 
         const result = await authenticationByPassword(
             { user: 'test', pass: '123' },
-            { getUser, getToken, storageToken, revokedAllToken }
+            { getUser, getToken, storeToken, revokeAllTokens }
         );
 
         expect(result.httpCode).toBe(200);
@@ -66,15 +66,15 @@ describe('authenticationByPassword Service', () => {
             payload: { user: { id: 1 } }, options: { expiresIn: '1h' }
         }));
 
-        expect(storageToken).toHaveBeenCalled();
-        expect(storageToken).toHaveBeenCalledTimes(1);
-        expect(storageToken).toHaveBeenCalledWith({
+        expect(storeToken).toHaveBeenCalled();
+        expect(storeToken).toHaveBeenCalledTimes(1);
+        expect(storeToken).toHaveBeenCalledWith({
             token: 'mocked-token', tokenId: 'mocked-uuid'
         });
 
-        expect(revokedAllToken).toHaveBeenCalled();
-        expect(revokedAllToken).toHaveBeenCalledTimes(1);
-        expect(revokedAllToken).toHaveBeenCalledWith({ idUsers: 1 });
+        expect(revokeAllTokens).toHaveBeenCalled();
+        expect(revokeAllTokens).toHaveBeenCalledTimes(1);
+        expect(revokeAllTokens).toHaveBeenCalledWith({ idUsers: 1 });
 
     });
 

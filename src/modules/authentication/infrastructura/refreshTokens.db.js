@@ -35,7 +35,7 @@ export const saveToken = async (values) => {
     }
 };
 
-export const revokedAllToken = async ({ idUsers }) => {
+export const revokeAllTokens = async ({ idUsers }) => {
 
     try {
         const result = await db(TABLE)
@@ -72,7 +72,7 @@ export const revokedAllToken = async ({ idUsers }) => {
     }
 };
 
-export const revokedSingleToken = async ({ tokenId, idUsers }) => {
+export const revokeSingleToken = async ({ tokenId, idUsers }) => {
 
     try {
         const result = await db(TABLE)

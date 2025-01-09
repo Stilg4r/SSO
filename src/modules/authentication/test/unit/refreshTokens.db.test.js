@@ -1,4 +1,4 @@
-import { saveToken, revokedAllToken, revokedSingleToken } from '../../infrastructura/refreshTokens.db.js';
+import { saveToken, revokeAllTokens, revokeSingleToken } from '../../infrastructura/refreshTokens.db.js';
 import db from '../../../../core/infrastructure/dataBase/dbInstance.js';
 import { randomUUID } from 'crypto';
 
@@ -47,7 +47,7 @@ describe('tokens db', () => {
     });
 
     it('Debería revocar todos los tokens de un usuario', async () => {
-        const result = await revokedAllToken({ idUsers: 1 });
+        const result = await revokeAllTokens({ idUsers: 1 });
 
         expect(result.error).toBe(false);
         expect(result.hasData).toBe(true);
@@ -56,7 +56,7 @@ describe('tokens db', () => {
     });
 
     it('Debería manejar el caso cuando no hay tokens para revocar', async () => {
-        const result = await revokedAllToken({ idUsers: 999 }); // Usuario inexistente
+        const result = await revokeAllTokens({ idUsers: 999 }); // Usuario inexistente
 
         expect(result.error).toBe(false);
         expect(result.hasData).toBe(false);
@@ -75,7 +75,7 @@ describe('tokens db', () => {
             createdBy: 1
         });
 
-        const result = await revokedSingleToken({ tokenId, idUsers: 1 });
+        const result = await revokeSingleToken({ tokenId, idUsers: 1 });
 
         expect(result.error).toBe(false);
         expect(result.hasData).toBe(true);
@@ -84,7 +84,7 @@ describe('tokens db', () => {
     });
 
     it('Debería manejar el caso cuando un token no existe', async () => {
-        const result = await revokedSingleToken({ tokenId: randomUUID(), idUsers: 1 });
+        const result = await revokeSingleToken({ tokenId: randomUUID(), idUsers: 1 });
 
         expect(result.error).toBe(false);
         expect(result.hasData).toBe(false);

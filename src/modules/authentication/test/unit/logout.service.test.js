@@ -13,7 +13,7 @@ describe('authenticationByPassword Service', () => {
             data: { revoked: 1 }
         });
 
-        const result = await logOutAll({ idUsers: 1 }, { revokedAllToken: mockRevokeAllTokens });
+        const result = await logOutAll({ idUsers: 1 }, { revokeAllTokens: mockRevokeAllTokens });
 
         expect(result.httpCode).toEqual(200);
         expect(mockRevokeAllTokens).toHaveBeenCalledTimes(1);
@@ -33,7 +33,7 @@ describe('authenticationByPassword Service', () => {
             hasData: false
         });
 
-        const result = await logOutAll({ idUsers: 1 }, { revokedAllToken: mockRevokeAllTokens });
+        const result = await logOutAll({ idUsers: 1 }, { revokeAllTokens: mockRevokeAllTokens });
 
         expect(result.httpCode).toEqual(500);
         expect(mockRevokeAllTokens).toHaveBeenCalledTimes(1);
@@ -51,7 +51,7 @@ describe('authenticationByPassword Service', () => {
             hasData: false
         });
 
-        const result = await logOutAll({ idUsers: 1 }, { revokedAllToken: mockRevokeAllTokens });
+        const result = await logOutAll({ idUsers: 1 }, { revokeAllTokens: mockRevokeAllTokens });
 
         expect(result.httpCode).toEqual(404);
         expect(mockRevokeAllTokens).toHaveBeenCalledTimes(1);
@@ -70,7 +70,7 @@ describe('authenticationByPassword Service', () => {
             data: { revoked: 1 }
         });
 
-        const result = await logOutSingle({ tokenId: 'some-uuid', idUsers: 1 }, { revokedSingleToken: mockRevokeSingleToken });
+        const result = await logOutSingle({ tokenId: 'some-uuid', idUsers: 1 }, { revokeSingleToken: mockRevokeSingleToken });
 
         expect(result.httpCode).toEqual(200);
         expect(mockRevokeSingleToken).toHaveBeenCalledTimes(1);
@@ -90,7 +90,7 @@ describe('authenticationByPassword Service', () => {
             hasData: false
         });
 
-        const result = await logOutSingle({ tokenId: 'some-uuid', idUsers: 1 }, { revokedSingleToken: mockRevokeSingleToken });
+        const result = await logOutSingle({ tokenId: 'some-uuid', idUsers: 1 }, { revokeSingleToken: mockRevokeSingleToken });
 
         expect(result.httpCode).toEqual(500);
         expect(mockRevokeSingleToken).toHaveBeenCalledTimes(1);
@@ -108,7 +108,7 @@ describe('authenticationByPassword Service', () => {
             hasData: false
         });
 
-        const result = await logOutSingle({ tokenId: 'some-uuid', idUsers: 1 }, { revokedSingleToken: mockRevokeSingleToken });
+        const result = await logOutSingle({ tokenId: 'some-uuid', idUsers: 1 }, { revokeSingleToken: mockRevokeSingleToken });
 
         expect(result.httpCode).toEqual(404);
         expect(mockRevokeSingleToken).toHaveBeenCalledTimes(1);

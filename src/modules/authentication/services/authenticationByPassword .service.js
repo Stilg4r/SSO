@@ -6,8 +6,8 @@ export const authenticationByPassword = async (
     {
         getUser,
         getToken,
-        storageToken,
-        revokedAllToken
+        storeToken,
+        revokeAllTokens
     }
 ) => {
 
@@ -27,10 +27,10 @@ export const authenticationByPassword = async (
         const accessToken = await getToken({ payload: { user: { id } }, options: { expiresIn: '1h' } });
         if (accessToken.error) return { httpCode: 500, response: accessToken };
 
-        const resultRevoqued = await revokedAllToken({ idUsers: id });
+        const resultRevoqued = await revokeAllTokens({ idUsers: id });
         if (resultRevoqued.error) return { httpCode: 500, response: resultRevoqued };
 
-        const saveTokenRefresh = await storageToken({ token: refreshToken.data.token, tokenId });
+        const saveTokenRefresh = await storeToken({ token: refreshToken.data.token, tokenId });
         if (saveTokenRefresh.error) return { httpCode: 500, response: saveTokenRefresh };
 
         return {

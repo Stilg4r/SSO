@@ -69,7 +69,7 @@ describe('getToken service', () => {
 
         const tokenId = randomUUID();
 
-        const result = await tokenService.storageToken({ token: 'mocked-token', tokenId }, mockVerifyToken);
+        const result = await tokenService.storeToken({ token: 'mocked-token', tokenId }, mockVerifyToken);
 
         expect(result.error).toBe(false);
         expect(result.hasData).toBe(true);

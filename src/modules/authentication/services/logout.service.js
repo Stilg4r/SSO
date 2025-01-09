@@ -1,15 +1,15 @@
-export const logOutAll = async ({ idUsers }, { revokedAllToken }) => {
+export const logOutAll = async ({ idUsers }, { revokeAllTokens }) => {
 
-    const resultRevoqued = await revokedAllToken({ idUsers });
+    const resultRevoqued = await revokeAllTokens({ idUsers });
     if (resultRevoqued.error) return { httpCode: 500, response: resultRevoqued };
     if (!resultRevoqued.hasData) return { httpCode: 404, response: resultRevoqued };
     return { httpCode: 200, response: resultRevoqued }
 
 };
 
-export const logOutSingle = async ({ tokenId, idUsers }, { revokedSingleToken }) => {
+export const logOutSingle = async ({ tokenId, idUsers }, { revokeSingleToken }) => {
 
-    const resultRevoqued = await revokedSingleToken({ tokenId, idUsers });
+    const resultRevoqued = await revokeSingleToken({ tokenId, idUsers });
     if (resultRevoqued.error) return { httpCode: 500, response: resultRevoqued };
     if (!resultRevoqued.hasData) return { httpCode: 404, response: resultRevoqued };
     return { httpCode: 200, response: resultRevoqued }

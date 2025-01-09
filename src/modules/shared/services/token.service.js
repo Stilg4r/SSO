@@ -57,7 +57,7 @@ export const verifyToken = async ({ token, options = {} }) => {
     }
 };
 
-export const storageToken = async ({ token, tokenId }, verifyFn = verifyToken) => {
+export const storeToken = async ({ token, tokenId }, verifyFn = verifyToken) => {
     const validToken = await verifyFn({ token });
     if (validToken.error) { return validToken };
     const { data: { user: { id }, exp } } = validToken;

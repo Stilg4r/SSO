@@ -1,9 +1,9 @@
-import { authenticationByPassword } from '../services/autenticacionByPassword.service.js';
+import { authenticationByPassword } from '../services/authenticationByPassword .service.js';
 import { logOutAll, logOutSingle } from '../services/logout.service.js';
-import { responseHandler } from '../../../core/services/responsesHandlers.service.js';
+import { responseHandler } from '../../../core/services/responseHandler.service.js';
 import { getUser, getUserById } from '../infrastructura/users.db.js';
-import { getToken, storageToken } from '../../shared/services/token.service.js';
-import { revokedAllToken, revokedSingleToken, findTokenByTokenId } from '../infrastructura/refreshTokens.db.js';
+import { getToken, storeToken } from '../../shared/services/token.service.js';
+import { revokeAllTokens, revokeSingleToken, findTokenByTokenId } from '../infrastructura/refreshTokens.db.js';
 import { refreshToken } from '../services/renewToken.service.js';
 
 export const postAuthenticationByPassword = async (req, res) => {
@@ -14,7 +14,7 @@ export const postAuthenticationByPassword = async (req, res) => {
     } = req
     const result = await authenticationByPassword(
         { user, pass },
-        { getUser, getToken, storageToken, revokedAllToken }
+        { getUser, getToken, storeToken, revokeAllTokens }
     );
     return responseHandler(res, result);
 };
@@ -26,7 +26,7 @@ export const getLogOut = async (req, res) => {
 
         const result = await logOutAll(
             { idUsers: id },
-            { revokedAllToken }
+            { revokeAllTokens }
         );
 
         return responseHandler(res, result);
@@ -35,7 +35,7 @@ export const getLogOut = async (req, res) => {
 
         const result = await logOutSingle(
             { tokenId: jti, idUsers: id },
-            { revokedSingleToken }
+            { revokeSingleToken }
         );
 
         return responseHandler(res, result);
