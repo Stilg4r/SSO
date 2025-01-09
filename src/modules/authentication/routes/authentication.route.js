@@ -19,29 +19,27 @@ import { authorizationMiddleware } from '../../shared/middlewares/autorization.m
 
 const endPoints = Router();
 
+endPoints.post('/*', validateHttpMethod('post'), jsonHeader)
+endPoints.get('/*', validateHttpMethod('get'))
+
 endPoints.route('/password')
     .post(
-        validateHttpMethod('post'),
-        jsonHeader,
         validateRequest(authenticationByPasswordValidation, 'body'),
         postAuthenticationByPassword
     );
 
 endPoints.route('/logout')
     .get(
-        validateHttpMethod('get'),
         authorizationMiddleware,
         getLogOut
     );
 
 endPoints.route('/renew')
     .get(
-        validateHttpMethod('get'),
         authorizationMiddleware,
         validateRequest(renewTokenValidation, 'token'),
         getRenewToken
     );
-
 
 export default endPoints;
 
