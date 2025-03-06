@@ -25,7 +25,6 @@ describe('getToken service', () => {
             options: { expiresIn: '1h' },
         }
         const result = await tokenService.getToken(token);
-        console.log(result);
 
         expect(result.error).toBe(false);
         expect(result.message).toBe('Token generado');

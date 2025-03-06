@@ -1,4 +1,4 @@
-import { bearerAuthorization, authorizationHandler, authorizations } from '../../services/autorizationsHandlers.js';
+import { bearerAuthorization, authorizationHandler, authorizations } from '../../services/autorizationsHandlers.service.js';
 import { verifyToken } from '../../services/token.service.js';
 
 // Mock de la función verifyToken
