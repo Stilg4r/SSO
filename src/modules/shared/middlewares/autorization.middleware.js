@@ -1,5 +1,5 @@
 import { CustomError } from '../../../core/middlewares/errorsHandlers.middleware.js';
-import { authorizationHandler } from '../services/autorizationsHandlers.js';
+import { authorizationHandler } from '../services/autorizationsHandlers.service.js';
 
 export const authorizationMiddleware = async (req, res, next) => {
     const { headers: { authorization } } = req;

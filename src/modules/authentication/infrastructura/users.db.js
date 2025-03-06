@@ -1,4 +1,5 @@
 import db from '../../../core/infrastructure/dataBase/dbInstance.js';
+// Consulta para optener un usuario por su nombre de usuario
 export const getUser = async ({ user }) => {
     try {
         const userFound = await db
@@ -30,9 +31,12 @@ export const getUser = async ({ user }) => {
         return {
             error: true,
             message: 'Error al busar usuario',
+            hasData: false,
+            data: {}
         };
     }
 };
+// Consulta para optener un usuario por su id
 export const getUserById = async ({ id }) => {
     try {
         const userFound = await db
@@ -64,6 +68,8 @@ export const getUserById = async ({ id }) => {
         return {
             error: true,
             message: 'Error al busar usuario',
+            hasData: false,
+            data: {},
         };
     }
 };

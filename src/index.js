@@ -18,6 +18,7 @@ mainMiddlewares(app);
   try {
 
     const apiVersion = '/api/v1';
+
     await routeGenerator(app, './src/modules', apiVersion);
 
     app.use(notFoundError);

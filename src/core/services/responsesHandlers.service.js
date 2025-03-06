@@ -3,9 +3,7 @@ const httpCodes = new Map([
     [401, 'No tiene autorización para este recurso'],
     [500, 'Error interno del servidor'],
 ]);
-
 export const responseHandler = (res, dataResponse) => {
-    console.log(dataResponse);
     try {
         const {
             httpCode = 500,
@@ -26,7 +24,7 @@ export const responseHandler = (res, dataResponse) => {
         console.log(error);
         return res.status(500).json({
             error: true,
-            message: "Error interno del servidor",
+            message: "Ocurrió un error en el servidor, al procesar la respuesta",
             data: error.toString()
         });
     }

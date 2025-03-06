@@ -31,6 +31,8 @@ export const saveToken = async (values) => {
         return {
             error: true,
             message: 'Error al guardar el token',
+            hasData: false,
+            data: {}
         };
     }
 };

@@ -1,13 +1,13 @@
-import { V3, errors as pasetoErros } from 'paseto';
+import { V3 } from 'paseto';
 import fs from 'fs';
 import { saveToken } from '../../authentication/infrastructura/refreshTokens.db.js';
 import { createHash } from 'crypto';
-import { PRIVATEKEYPATH, PUBLICKEYPATH } from '../../../../env.cjs';
+import { SYMMETRICKEYPATH } from '../../../../env.cjs';
 
 export const getToken = async ({ payload, options }) => {
     const _options = options || { expiresIn: '1h' };
 
-    if (!fs.existsSync(PRIVATEKEYPATH)) {
+    if (!fs.existsSync(SYMMETRICKEYPATH)) {
         return {
             error: true,
             message: 'No se encontró la llave privada',
@@ -15,14 +15,16 @@ export const getToken = async ({ payload, options }) => {
         };
     }
     try {
-        const privateKey = fs.readFileSync(PRIVATEKEYPATH);
-        const token = await V3.sign(payload, privateKey.toString(), _options);
+        const keyHex = fs.readFileSync(SYMMETRICKEYPATH);
+        const symmetricKey = Buffer.from(keyHex, 'hex');
+        const token = await V3.encrypt(payload, symmetricKey, _options)
         return ({
             error: false,
             message: 'Token generado',
             data: { token }
         });
     } catch (error) {
+        console.error(error);
         return {
             error: true,
             message: 'Error al generar el token',
@@ -33,7 +35,7 @@ export const getToken = async ({ payload, options }) => {
 
 export const verifyToken = async ({ token, options = {} }) => {
 
-    if (!fs.existsSync(PUBLICKEYPATH)) {
+    if (!fs.existsSync(SYMMETRICKEYPATH)) {
         return {
             error: true,
             message: 'No se encontró la llave pública',
@@ -41,14 +43,16 @@ export const verifyToken = async ({ token, options = {} }) => {
         };
     }
     try {
-        const publicKey = fs.readFileSync(PUBLICKEYPATH);
-        const payload = await V3.verify(token, publicKey.toString(), options);
+        const keyHex = fs.readFileSync(SYMMETRICKEYPATH);
+        const symmetricKey = Buffer.from(keyHex, 'hex');
+        const payload = await V3.decrypt(token, symmetricKey, options);
         return {
             error: false,
             message: 'Token verificado',
             data: payload
         };
     } catch (error) {
+        console.error(error);
         return {
             error: true,
             message: error.toString(),

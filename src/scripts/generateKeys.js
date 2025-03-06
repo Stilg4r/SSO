@@ -1,24 +1,24 @@
-// scripts/rototeKeys.js
-// Genera un par de claves pública y privada y las guarda en archivos PEM
-// para ser utilizadas para gerara tokens PASETO
+// scripts/rotateKeys.js
+// Genera una clave simétrica de 32 bytes y la guarda en un archivo
+// para ser utilizada para generar tokens PASETO
 // Con caducidad de 1 mes y se deben rotar cada mes
 
-import { generateKeyPairSync } from 'crypto';
+import { randomBytes } from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const basePath = path.join(__dirname, '../core/infrastructure/storage/keys');
+const basePath = path.join(__dirname, '../../storage/keys');
+
 const KEY_EXPIRATION_DAYS = 30;
 
 if (!fs.existsSync(basePath)) {
     fs.mkdirSync(basePath, { recursive: true });
 }
 
-const publicKeyPath = path.join(basePath, 'public.pem');
-const privateKeyPath = path.join(basePath, 'private.pem');
+const symmetricKeyPath = path.join(basePath, 'symmetric.key');
 const metadataPath = path.join(basePath, 'metadata.json');
 const eventsLogPath = path.join(basePath, 'events.log');
 
@@ -40,49 +40,42 @@ function rotateLogs() {
     }
 }
 
-function backupOldKeys() {
+function backupOldKey() {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    fs.renameSync(publicKeyPath, `${publicKeyPath}.${timestamp}`);
-    fs.renameSync(privateKeyPath, `${privateKeyPath}.${timestamp}`);
-    logEvent('LLaves antiguas respaldadas');
+    fs.renameSync(symmetricKeyPath, `${symmetricKeyPath}.${timestamp}`);
+    logEvent('Clave antigua respaldada');
 }
 
-function generateKeys() {
-    const { publicKey, privateKey } = generateKeyPairSync('ec', {
-        namedCurve: 'P-384',
-        publicKeyEncoding: { type: 'spki', format: 'pem' },
-        privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
-    });
-
+function generateSymmetricKey() {
+    const symmetricKey = randomBytes(32); // Genera una clave de 32 bytes
     const metadata = {
         createdAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * KEY_EXPIRATION_DAYS).toISOString(),
     };
 
-    fs.writeFileSync(publicKeyPath, publicKey);
-    fs.writeFileSync(privateKeyPath, privateKey);
+    fs.writeFileSync(symmetricKeyPath, symmetricKey);
     fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
-    logEvent('Llaves generadas correctamente');
+    logEvent('Clave simétrica generada correctamente en ' + symmetricKeyPath);
 }
 
 try {
     rotateLogs();
-    console.log('Validando si las llaves han expirado...');
+    console.log('Validando si la clave ha expirado...');
     if (fs.existsSync(metadataPath)) {
         const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf-8'));
         if (new Date(metadata.expiresAt) > new Date()) {
-            console.log('Las llaves aún son válidas. No es necesario rotarlas.');
+            console.log('La clave aún es válida. No es necesario rotarla.');
             process.exit(0);
         } else {
-            console.log('LLaves expiradas. Generando nuevas llaves.');
-            backupOldKeys();
+            console.log('Clave expirada. Generando nueva clave.');
+            backupOldKey();
         }
     } else {
-        console.log('No se encontró metadata de llaves. Generando nuevas llaves.');
+        console.log('No se encontró metadata de la clave. Generando nueva clave.');
     }
 
-    generateKeys();
-    console.log('LLaves rotadas correctamente.');
+    generateSymmetricKey();
+    console.log('Clave rotada correctamente.');
 } catch (error) {
     console.error('Error durante la rotación:', error);
     logEvent(`Error: ${error.message}`, 'ERROR');

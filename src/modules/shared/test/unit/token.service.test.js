@@ -2,7 +2,7 @@ import * as tokenService from '../../services/token.service';
 import * as refreshTokens from '../../../authentication/infrastructura/refreshTokens.db';
 import { randomUUID } from 'crypto';
 import fs from 'fs';
-import { PRIVATEKEYPATH } from '../../../../../env.cjs';
+import { SYMMETRICKEYPATH } from '../../../../../env.cjs';
 
 jest.mock('../../../authentication/infrastructura/refreshTokens.db'); // Mockea el módulo completo
 
@@ -10,8 +10,8 @@ describe('getToken service', () => {
 
 
     beforeAll(() => {
-        if (!fs.existsSync(PRIVATEKEYPATH)) {
-            throw new Error(`Clave privada no encontrada en ${PRIVATEKEYPATH}`);
+        if (!fs.existsSync(SYMMETRICKEYPATH)) {
+            throw new Error(`Clave simetrica no encontrada en ${SYMMETRICKEYPATH}`);
         }
     });
 
@@ -25,6 +25,7 @@ describe('getToken service', () => {
             options: { expiresIn: '1h' },
         }
         const result = await tokenService.getToken(token);
+        console.log(result);
 
         expect(result.error).toBe(false);
         expect(result.message).toBe('Token generado');

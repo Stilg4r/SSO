@@ -1,6 +1,6 @@
 import { authenticationByPassword } from '../services/authenticationByPassword .service.js';
 import { logOutAll, logOutSingle } from '../services/logout.service.js';
-import { responseHandler } from '../../../core/services/responseHandler.service.js';
+import { responseHandler } from '../../../core/services/responsesHandlers.service.js';
 import { getUser, getUserById } from '../infrastructura/users.db.js';
 import { getToken, storeToken } from '../../shared/services/token.service.js';
 import { revokeAllTokens, revokeSingleToken, findTokenByTokenId } from '../infrastructura/refreshTokens.db.js';

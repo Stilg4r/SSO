@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express from 'express';
 import { authorizationMiddleware } from '../../middlewares/autorization.middleware.js';
-import { authorizationHandler } from '../../services/autorizationsHandlers.js';
+import { authorizationHandler } from '../../services/autorizationsHandlers.service.js';
 import { CustomError } from '../../../../core/middlewares/errorsHandlers.middleware.js';
 
 jest.mock('../../services/autorizationsHandlers.js', () => ({

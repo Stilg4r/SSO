@@ -20,7 +20,6 @@ const mainMiddlewares = (app) => {
     app.use(cors());      // Habilitar CORS en la aplicación
     app.disable('x-powered-by'); // Oculta información del servidor
 
-
     const limiter = rateLimit({
         windowMs: 15 * 60 * 1000, // 15 minutos
         max: 100, // Máximo de solicitudes por IP
@@ -29,52 +28,19 @@ const mainMiddlewares = (app) => {
 
     // Logs de solicitudes
     if (ENVIRONMENT === 'development') {
-
-
-
-
-
-
         app.use((req, res, next) => {
-
             const vervoseLog = (json) => {
                 console.info(json);
             };
-
             console.info('💬>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
             const { query, params, body } = req;
             vervoseLog({ query, params, body });
-
-
-
             next();
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         app.use(morgan('dev')); // Verboso en desarrollo
     } else {
         app.use(morgan('tiny')); // Compacto en producción
     }
-
-
-
-
-
 };
 
 export default mainMiddlewares;
