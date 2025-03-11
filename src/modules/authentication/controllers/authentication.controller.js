@@ -5,6 +5,7 @@ import { getUser, getUserById } from '../infrastructura/users.db.js';
 import { getToken, storeToken } from '../../shared/services/token.service.js';
 import { revokeAllTokens, revokeSingleToken, findTokenByTokenId } from '../infrastructura/refreshTokens.db.js';
 import { refreshToken } from '../services/renewToken.service.js';
+import { getUserPermissionsMolules } from '../infrastructura/modules.db.js';
 
 export const postAuthenticationByPassword = async (req, res) => {
     const {
@@ -14,7 +15,7 @@ export const postAuthenticationByPassword = async (req, res) => {
     } = req
     const result = await authenticationByPassword(
         { user, pass },
-        { getUser, getToken, storeToken, revokeAllTokens }
+        { getUser, getToken, storeToken, revokeAllTokens, getUserPermissionsMolules }
     );
     return responseHandler(res, result);
 };

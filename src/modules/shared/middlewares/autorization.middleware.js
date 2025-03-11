@@ -18,16 +18,12 @@ export const authorizationMiddleware = async (req, res, next) => {
 
             const handler = authorizationHandler(type);
 
-            if (handler.error) {
-                return next(new CustomError(handler.message, 401));
-            }
+            if (handler.error) { return next(new CustomError(handler.message, 401)); }
 
             const { data: handlerFunction } = handler;
 
             const decodedToken = await handlerFunction(token);
-            if (decodedToken.error) {
-                return next(new CustomError(decodedToken.message, 401));
-            }
+            if (decodedToken.error) { return next(new CustomError(decodedToken.message, 401)); }
 
             req.token = decodedToken.data;
             next();
