@@ -1,7 +1,10 @@
-export const permissionChecker = (
+import { match } from "path-to-regexp";
+
+export const permissionChecker = async (
     { permissions, module, method, url, userId },
     { getUserPermissions }
 ) => {
+    const PERMISSION_GRANTED = 1;
 
     // Buscar si tiene permisos para el módulo
     const foundModule = permissions.find(m => m.name === module);
@@ -24,7 +27,7 @@ export const permissionChecker = (
         }
     }
 
-    const foundPermission = getUserPermissions({ userId, idModule });
+    const foundPermission = await getUserPermissions({ userId, idModule });
     if (foundPermission.error) { return foundPermission; }
 
     if (!foundPermission.hasData) {
@@ -37,8 +40,12 @@ export const permissionChecker = (
 
     const { data: urlPermissions } = foundPermission;
 
-    // Buscar si tiene permisos para la url con el método
-    const foundUrl = urlPermissions.find(({ url: urlPermission }) => urlPermission === url);
+    // Buscar si tiene permisos para la url con el método incluso si es una url dinámica
+    const foundUrl = urlPermissions.find(({ url: urlPermission }) => {
+        const matchUrl = match(urlPermission);
+        return matchUrl(url);
+    });
+
     if (foundUrl === undefined) {
         return {
             error: true,
@@ -57,7 +64,8 @@ export const permissionChecker = (
     }
     const methodPermission = foundUrl[method];
 
-    if (methodPermission === 1) { // Cualquier valor diferente de 1 es falso no tiene permisos
+    // Si el método es 1, tiene permisos para acceder a la url con el método 
+    if (methodPermission === PERMISSION_GRANTED) {
         return {
             error: false,
             message: 'Tiene permisos para acceder a esta url con este método',
